@@ -1,0 +1,13 @@
+# Those are fallback values. All of them can be overridden by environment variables.
+# The environment variables are prefixed with the app name, so for example:
+# APP_HOST will override app.host
+app:
+  host: localhost
+  port: 8081
+  jwtSecret: change-m3-@$ap-
+  adminUser: admin
+  adminPassword: s3cure-p4ssw0rd
+  adminEmail: test@localhost.io
+db:
+  persistence: FILE # else in-memory is used
+  migrationsPath: "../../migrations"

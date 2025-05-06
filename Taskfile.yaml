@@ -1,0 +1,85 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+tasks:
+  default:
+    cmd: task --list-all
+
+  install-go-deps:
+    desc: Install Go dependencies
+    cmds:
+      - go mod download
+      - go mod tidy
+      - go mod vendor
+    preconditions:
+      - which go
+
+  install-dev-tools:
+    desc: Install development tools
+    cmds:
+      - brew install sqlc tailwindcss mockery golangci-lint golang-migrate
+      - go install github.com/a-h/templ/cmd/templ@latest
+      - go install github.com/air-verse/air@latest
+    preconditions:
+      - which brew
+      - which go
+  
+  generate-mocks:
+    desc: Generate mocks for the project
+    cmds:
+      - mockery
+    preconditions:
+      - which go
+      - which mockery
+  
+  generate-sqlc:
+    desc: Generate SQLC code
+    cmds:
+      - sqlc generate
+    preconditions:
+      - which sqlc
+  
+  generate-tailwind:
+    desc: Generate Tailwind CSS
+    cmds:
+      - tailwindcss -i templates/css/app.css -o public/styles.css
+    preconditions:
+      - which tailwindcss
+
+  generate-templates:
+    desc: Generate templates using templ
+    cmds:
+      - templ generate
+    preconditions:
+      - which go
+      - which templ
+
+  build:
+    desc: Build the project
+    cmds:
+      - go build -o bin/go-register ./cmd/web/main.go
+    preconditions:
+      - which go
+
+  golangci-lint:
+    desc: Run golangci-lint
+    cmds:
+      - golangci-lint run --timeout 2m
+    preconditions:
+      - which golangci-lint
+
+  unittest: 
+    desc: Run unit-tests 
+    cmds:
+      - go test -tags=unittest ./...
+    preconditions:
+      - which go
+
+  integrationtest: 
+    desc: Run integration-tests 
+    cmds:
+      - go test -tags=integrationtest ./...
+    preconditions:
+      - which go

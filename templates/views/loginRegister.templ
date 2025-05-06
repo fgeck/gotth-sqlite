@@ -1,0 +1,28 @@
+package views
+
+import "github.com/fgeck/go-register/templates/layout"
+
+templ LoginRegister() {
+  @layout.Base() {
+    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+        <!-- Tabs for Login and Register -->
+        <div class="flex justify-center mb-6">
+          <button hx-get="/loginForm" hx-target="#form-container" hx-swap="innerHTML"
+            class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-l-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Login
+          </button>
+          <button hx-get="/registerForm" hx-target="#form-container" hx-swap="innerHTML"
+            class="px-4 py-2 text-sm font-medium text-indigo-600 bg-gray-200 rounded-r-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Register
+          </button>
+        </div>
+        <!-- Form Container -->
+        <div id="form-container" class="space-y-6">
+          <!-- Default to Login Form -->
+          @LoginForm()
+        </div>
+      </div>
+    </div>
+  }
+}
