@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup:
+    name: go mod download
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.1
+      - name: Download Dependencies
+        run: go mod download
+
+  fmt:
+    name: go fmt
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.1
+      - name: Run go fmt
+        run: |
+          go fmt ./...
+          git diff --exit-code # Fail if files are not formatted
+
+  lint:
+    name: golangci-Lint
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.1
+      - name: Run GolangCI-Lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: latest
+
+  build:
+    name: build main.go
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.1
+      - name: Build Main Binary
+        run: go build -o main ./cmd/web/main.go
+
+  unit-tests:
+    name: unit-tests
+    needs: [fmt, lint, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.1
+      - name: Run Unit Tests
+        run: go test -tags=unittest -v ./...
+
+  integration-tests:
+    name: integration-tests
+    needs: [fmt, lint, build, unit-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.1
+      - name: Run Integration Tests
+        run: go test -tags=integrationtest -v ./...

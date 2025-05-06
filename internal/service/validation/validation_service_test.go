@@ -5,7 +5,7 @@ package validation_test
 import (
 	"testing"
 
-	validation "github.com/fgeck/go-register/internal/service/validation"
+	validation "github.com/fgeck/gotth-sqlite/internal/service/validation"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

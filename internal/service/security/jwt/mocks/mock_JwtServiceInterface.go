@@ -5,8 +5,8 @@
 package jwt
 
 import (
-	"github.com/fgeck/go-register/internal/service/security/jwt"
-	"github.com/fgeck/go-register/internal/service/user"
+	"github.com/fgeck/gotth-sqlite/internal/service/security/jwt"
+	"github.com/fgeck/gotth-sqlite/internal/service/user"
 	mock "github.com/stretchr/testify/mock"
 )
 

@@ -1,0 +1,34 @@
+all: false
+dir: '{{.InterfaceDir}}'
+filename: "mocks/mock_{{.InterfaceName}}.go"
+force-file-write: true
+formatter: goimports
+log-level: info
+structname: '{{.Mock}}{{.InterfaceName}}'
+pkgname: '{{.SrcPackageName}}'
+recursive: false
+require-template-schema-exists: true
+template: testify
+template-schema: '{{.Template}}.schema.json'
+packages:
+  github.com/fgeck/go-register/internal/repository:
+    config:
+      all: true
+  github.com/fgeck/go-register/internal/service/config:
+    config:
+      all: true      
+  github.com/fgeck/go-register/internal/service/loginRegister:
+    config:
+      all: true
+  github.com/fgeck/go-register/internal/service/security/jwt:
+    config:
+      all: true
+  github.com/fgeck/go-register/internal/service/security/password:
+    config:
+      all: true
+  github.com/fgeck/go-register/internal/service/user:
+    config:
+      all: true
+  github.com/fgeck/go-register/internal/service/validation:
+    config:
+      all: true

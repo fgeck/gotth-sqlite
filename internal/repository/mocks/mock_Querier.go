@@ -7,7 +7,7 @@ package repository
 import (
 	"context"
 
-	"github.com/fgeck/go-register/internal/repository"
+	"github.com/fgeck/gotth-sqlite/internal/repository"
 	mock "github.com/stretchr/testify/mock"
 )
 

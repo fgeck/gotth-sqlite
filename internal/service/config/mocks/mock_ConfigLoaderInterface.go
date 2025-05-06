@@ -5,7 +5,7 @@
 package config
 
 import (
-	"github.com/fgeck/go-register/internal/service/config"
+	"github.com/fgeck/gotth-sqlite/internal/service/config"
 	mock "github.com/stretchr/testify/mock"
 )
 

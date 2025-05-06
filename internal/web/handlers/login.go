@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	loginregister "github.com/fgeck/go-register/internal/service/loginRegister"
-	"github.com/fgeck/go-register/internal/service/render"
+	loginregister "github.com/fgeck/gotth-sqlite/internal/service/loginRegister"
+	"github.com/fgeck/gotth-sqlite/internal/service/render"
 
-	"github.com/fgeck/go-register/templates/views"
+	"github.com/fgeck/gotth-sqlite/templates/views"
 	"github.com/labstack/echo/v4"
 )
 

@@ -1,4 +1,4 @@
-# go-register
+# gotth-sqlite
 
 Template repo for user registration and signin based on GoTTH (Go, Tailwind, Templ, Htmx) stack
 

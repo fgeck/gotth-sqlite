@@ -3,8 +3,8 @@ package middleware
 import (
 	"strings"
 
-	"github.com/fgeck/go-register/internal/service/security/jwt"
-	user "github.com/fgeck/go-register/internal/service/user"
+	"github.com/fgeck/gotth-sqlite/internal/service/security/jwt"
+	user "github.com/fgeck/gotth-sqlite/internal/service/user"
 	gojwt "github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )

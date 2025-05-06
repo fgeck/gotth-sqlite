@@ -9,12 +9,12 @@ import (
 
 	"github.com/google/uuid"
 
-	customErrors "github.com/fgeck/go-register/internal/service/errors"
-	"github.com/fgeck/go-register/internal/service/loginRegister"
-	jwt "github.com/fgeck/go-register/internal/service/security/jwt/mocks"
-	password "github.com/fgeck/go-register/internal/service/security/password/mocks"
-	"github.com/fgeck/go-register/internal/service/user"
-	userMocks "github.com/fgeck/go-register/internal/service/user/mocks"
+	customErrors "github.com/fgeck/gotth-sqlite/internal/service/errors"
+	"github.com/fgeck/gotth-sqlite/internal/service/loginRegister"
+	jwt "github.com/fgeck/gotth-sqlite/internal/service/security/jwt/mocks"
+	password "github.com/fgeck/gotth-sqlite/internal/service/security/password/mocks"
+	"github.com/fgeck/gotth-sqlite/internal/service/user"
+	userMocks "github.com/fgeck/gotth-sqlite/internal/service/user/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

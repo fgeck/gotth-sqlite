@@ -3,7 +3,7 @@ package user
 import (
 	"strings"
 
-	"github.com/fgeck/go-register/internal/repository"
+	"github.com/fgeck/gotth-sqlite/internal/repository"
 	"github.com/google/uuid"
 )
 

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/fgeck/go-register/internal/service/security/jwt"
+	"github.com/fgeck/gotth-sqlite/internal/service/security/jwt"
 	gojwt "github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"

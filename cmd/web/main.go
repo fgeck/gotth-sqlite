@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/fgeck/go-register/internal/service/config"
-	"github.com/fgeck/go-register/internal/web"
+	"github.com/fgeck/gotth-sqlite/internal/service/config"
+	"github.com/fgeck/gotth-sqlite/internal/web"
 	"github.com/labstack/echo/v4"
 )
 

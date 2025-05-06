@@ -10,8 +10,8 @@ import (
 
 	gojwt "github.com/golang-jwt/jwt/v5"
 
-	"github.com/fgeck/go-register/internal/service/security/jwt"
-	"github.com/fgeck/go-register/internal/service/user"
+	"github.com/fgeck/gotth-sqlite/internal/service/security/jwt"
+	"github.com/fgeck/gotth-sqlite/internal/service/user"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

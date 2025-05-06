@@ -59,7 +59,7 @@ tasks:
   build:
     desc: Build the project
     cmds:
-      - go build -o bin/go-register ./cmd/web/main.go
+      - go build -o bin/gotth-sqlite ./cmd/web/main.go
     preconditions:
       - which go
 

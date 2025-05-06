@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/fgeck/go-register/internal/service/security/password"
+	"github.com/fgeck/gotth-sqlite/internal/service/security/password"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

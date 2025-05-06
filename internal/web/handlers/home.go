@@ -3,8 +3,8 @@ package handlers
 import (
 	"fmt"
 
-	"github.com/fgeck/go-register/internal/service/render"
-	views "github.com/fgeck/go-register/templates/views"
+	"github.com/fgeck/gotth-sqlite/internal/service/render"
+	views "github.com/fgeck/gotth-sqlite/templates/views"
 	echo "github.com/labstack/echo/v4"
 )
 

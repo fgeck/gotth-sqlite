@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/fgeck/go-register/internal/service/security/jwt"
-	mw "github.com/fgeck/go-register/internal/web/middleware"
+	"github.com/fgeck/gotth-sqlite/internal/service/security/jwt"
+	mw "github.com/fgeck/gotth-sqlite/internal/web/middleware"
 	gojwt "github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"

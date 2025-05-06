@@ -10,15 +10,15 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/fgeck/go-register/internal/repository"
-	"github.com/fgeck/go-register/internal/service/config"
-	"github.com/fgeck/go-register/internal/service/loginRegister"
-	"github.com/fgeck/go-register/internal/service/security/jwt"
-	"github.com/fgeck/go-register/internal/service/security/password"
-	"github.com/fgeck/go-register/internal/service/user"
-	"github.com/fgeck/go-register/internal/service/validation"
-	"github.com/fgeck/go-register/internal/web/handlers"
-	mw "github.com/fgeck/go-register/internal/web/middleware"
+	"github.com/fgeck/gotth-sqlite/internal/repository"
+	"github.com/fgeck/gotth-sqlite/internal/service/config"
+	"github.com/fgeck/gotth-sqlite/internal/service/loginRegister"
+	"github.com/fgeck/gotth-sqlite/internal/service/security/jwt"
+	"github.com/fgeck/gotth-sqlite/internal/service/security/password"
+	"github.com/fgeck/gotth-sqlite/internal/service/user"
+	"github.com/fgeck/gotth-sqlite/internal/service/validation"
+	"github.com/fgeck/gotth-sqlite/internal/web/handlers"
+	mw "github.com/fgeck/gotth-sqlite/internal/web/middleware"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -32,7 +32,7 @@ import (
 
 const (
 	TWENTY_FOUR_HOURS_IN_SECONDS = 24 * 60 * 60
-	ISSUER                       = "go-register"
+	ISSUER                       = "gotth-sqlite"
 	CONTEXT_TIMEOUT              = 10 * time.Second
 	DIR_PERMISSION               = 0755 // Read, write, execute for owner; read, execute for group and others
 
@@ -176,7 +176,7 @@ func createAdminUser(ctx context.Context, queries *repository.Queries, cfg *conf
 		Username:     adminName,
 		Email:        adminEmail,
 		PasswordHash: hashedPassword,
-		UserRole:     "admin",
+		UserRole:     "ADMIN",
 	}
 	user, err := queries.CreateUser(ctx, userParams)
 	if err != nil {

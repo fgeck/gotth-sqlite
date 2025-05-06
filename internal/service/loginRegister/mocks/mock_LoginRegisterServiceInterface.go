@@ -7,7 +7,7 @@ package loginRegister
 import (
 	"context"
 
-	"github.com/fgeck/go-register/internal/service/user"
+	"github.com/fgeck/gotth-sqlite/internal/service/user"
 	mock "github.com/stretchr/testify/mock"
 )
 
