@@ -16,16 +16,19 @@ import (
 	"github.com/fgeck/gotth-sqlite/internal/service/config"
 	"github.com/fgeck/gotth-sqlite/internal/service/user"
 	"github.com/fgeck/gotth-sqlite/internal/web"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestIntegrationRegisterLogin(t *testing.T) {
-
-	os.Setenv("DB_PERSISTENCE", "memory")
+	tmpDirPath := filepath.Join(os.TempDir(), uuid.NewString())
+	require.NoError(t, os.Mkdir(tmpDirPath, 0755))
+	defer os.RemoveAll(tmpDirPath)
+	os.Setenv("DB_DATABASEPATH", tmpDirPath)
 	os.Setenv("DB_MIGRATIONSPATH", "../migrations")
-	defer os.Unsetenv("DB_PERSISTENCE")
+	defer os.Unsetenv("DB_DATABASEPATH")
 	defer os.Unsetenv("DB_MIGRATIONSPATH")
 
 	cfgDirPath := filepath.Join("../", "cmd/", "web/")

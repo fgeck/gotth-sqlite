@@ -2,12 +2,7 @@ package web
 
 import (
 	"context"
-	"database/sql"
-	"errors"
-	"log"
 	"net/http"
-	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/fgeck/gotth-sqlite/internal/repository"
@@ -19,11 +14,6 @@ import (
 	"github.com/fgeck/gotth-sqlite/internal/service/validation"
 	"github.com/fgeck/gotth-sqlite/internal/web/handlers"
 	mw "github.com/fgeck/gotth-sqlite/internal/web/middleware"
-	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/sqlite"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/google/uuid"
-	_ "modernc.org/sqlite"
 
 	gojwt "github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -35,20 +25,30 @@ const (
 	ISSUER                       = "gotth-sqlite"
 	CONTEXT_TIMEOUT              = 10 * time.Second
 	DIR_PERMISSION               = 0755 // Read, write, execute for owner; read, execute for group and others
-
 )
 
 func InitServer(e *echo.Echo, cfg *config.Config) {
+	ctx := context.Background()
+
 	// Initialize DB
-	ctx, cancel := context.WithTimeout(context.Background(), CONTEXT_TIMEOUT)
-	defer cancel()
-	queries := connectToDatabase(cfg)
-	createAdminUser(ctx, queries, cfg)
+	passwordService := password.NewPasswordService()
+	dbAdmin := repository.NewDbAdminService(passwordService)
+	queries, err := dbAdmin.ConnectToDatabase(cfg.Db.DataBasePath)
+	if err != nil {
+		e.Logger.Fatalf("Failed to connect to database", err)
+	}
+	err = dbAdmin.Migrate(cfg.Db.MigrationsPath)
+	if err != nil {
+		e.Logger.Fatalf("Failed to migrate database", err)
+	}
+	err = dbAdmin.CreateAdminUser(ctx, cfg.App.AdminEmail, cfg.App.AdminUser, cfg.App.AdminPassword)
+	if err != nil {
+		e.Logger.Fatalf("Failed to create Admin User", err)
+	}
 
 	// Services
 	validator := validation.NewValidationService()
 	userService := user.NewUserService(queries, validator)
-	passwordService := password.NewPasswordService()
 	jwtService := jwt.NewJwtService(cfg.App.JwtSecret, ISSUER, TWENTY_FOUR_HOURS_IN_SECONDS)
 	loginRegisterService := loginRegister.NewLoginRegisterService(userService, passwordService, jwtService)
 
@@ -72,7 +72,7 @@ func InitServer(e *echo.Echo, cfg *config.Config) {
 	e.POST("/api/register", registerHandler.RegisterUserHandler)
 
 	// JWT Middleware only
-	res := e.Group("/restricted")
+	res := e.Group("/api/restricted")
 	res.Use(authenticationMiddleware.JwtAuthMiddleware())
 	// for testing purposes
 	res.GET("", func(c echo.Context) error {
@@ -84,10 +84,10 @@ func InitServer(e *echo.Echo, cfg *config.Config) {
 		if !ok {
 			return echo.ErrForbidden
 		}
-		name := claims.UserId
+		id := claims.UserId
 		role := claims.UserRole
 
-		return c.String(http.StatusOK, "Welcome "+name+" with role: "+role+"!")
+		return c.String(http.StatusOK, "Welcome user with ID "+id+" and with role: "+role+"!")
 	})
 
 	// Admin Routes (requires "UserRole" == "admin")
@@ -104,90 +104,9 @@ func InitServer(e *echo.Echo, cfg *config.Config) {
 		if !ok {
 			return echo.ErrForbidden
 		}
-		name := claims.UserId
+		id := claims.UserId
 		role := claims.UserRole
 
-		return c.String(http.StatusOK, "Welcome "+name+" with role: "+role+"!e")
+		return c.String(http.StatusOK, "Welcome user with ID "+id+" and with role: "+role+"!")
 	})
-}
-
-func connectToDatabase(cfg *config.Config) *repository.Queries {
-	DATABASE_PATH := "../../data/"
-	dbFilePath := DATABASE_PATH + "database.db"
-
-	var dbPersistence string
-	switch cfg.Db.Persistence {
-	case "FILE":
-		if err := os.MkdirAll(DATABASE_PATH, DIR_PERMISSION); err != nil {
-			log.Fatalf("Failed to create database directory: %v", err)
-		}
-		dbPersistence = dbFilePath
-	default:
-		dbPersistence = "file::memory:?cache=shared"
-	}
-
-	db, err := sql.Open("sqlite", dbPersistence)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Run migrations using golang-migrate
-	migrationPath := "file://" + cfg.Db.MigrationsPath
-	m, err := migrate.New(migrationPath, "sqlite://"+dbPersistence)
-	if err != nil {
-		log.Fatalf("Failed to initialize migrations: %v", err)
-	}
-
-	// Apply migrations
-	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
-		log.Fatalf("Failed to apply migrations: %v", err)
-	}
-
-	log.Println("Database migrations applied successfully.")
-	absPath, _ := filepath.Abs(dbPersistence)
-	log.Printf("Using SQLite database at: %s", absPath)
-	return repository.New(db)
-}
-
-func createAdminUser(ctx context.Context, queries *repository.Queries, cfg *config.Config) {
-	adminId := uuid.NewString()
-	adminName := cfg.App.AdminUser
-	adminPassword := cfg.App.AdminPassword
-	adminEmail := cfg.App.AdminEmail
-	hashedPassword, err := password.NewPasswordService().HashAndSaltPassword(adminPassword)
-	if err != nil {
-		log.Printf("Error hashing password: %v\n", err)
-		return
-	}
-
-	exists, err := queries.UserExistsByEmail(ctx, cfg.App.AdminEmail)
-	if err != nil {
-		log.Printf("Error checking if admin user exists: %v\n", err)
-		return
-	}
-
-	if exists == 1 {
-		log.Println("Admin user already exists, skipping creation.")
-		return
-	}
-
-	userParams := repository.CreateUserParams{
-		ID:           adminId,
-		Username:     adminName,
-		Email:        adminEmail,
-		PasswordHash: hashedPassword,
-		UserRole:     "ADMIN",
-	}
-	user, err := queries.CreateUser(ctx, userParams)
-	if err != nil {
-		log.Printf("Error creating admin user: %v\n", err)
-		return
-	}
-
-	log.Printf("Admin user created successfully:\n"+
-		"	id: %q\n	email: %q\n	username: %q\n",
-		user.ID,
-		user.Username,
-		user.Email,
-	)
 }
