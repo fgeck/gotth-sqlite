@@ -16,11 +16,20 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.24.3
+      - name: setup cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
       - name: Download Dependencies
         run: go mod download
 
   fmt:
-    name: go fmt
+    name: go fmt, vet, mod verify, mod tidy
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -30,10 +39,16 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.24.3
-      - name: Run go fmt
+      - name: Run go fmt, vet, mod verify, mod tidy
         run: |
           go fmt ./...
-          git diff --exit-code # Fail if files are not formatted
+          git diff --exit-code
+          go vet ./...
+          git diff --exit-code
+          go mod verify
+          git diff --exit-code
+          go mod tidy
+          git diff --exit-code
 
   lint:
     name: golangci-Lint
@@ -50,6 +65,22 @@ jobs:
         uses: golangci/golangci-lint-action@v8
         with:
           version: latest
+
+  security:
+    name: Vulnerability Check
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.3
+      - name: Run govulncheck
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
 
   build:
     name: build main.go
