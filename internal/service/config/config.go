@@ -17,7 +17,7 @@ type AppConfig struct {
 }
 
 type DbConfig struct {
-	Persistence    string `mapstructure:"persistence"` // memory or file
+	DataBasePath   string `mapstructure:"databasePath"`
 	MigrationsPath string `mapstructure:"migrationsPath"`
 }
 
