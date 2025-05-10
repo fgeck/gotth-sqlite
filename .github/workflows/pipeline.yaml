@@ -58,7 +58,7 @@ jobs:
           version: latest
 
   govulncheck:
-    name: Vulnerability Check
+    name: Govulncheck
     needs: setup
     runs-on: ubuntu-latest
     steps:
