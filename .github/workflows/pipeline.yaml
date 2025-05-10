@@ -15,12 +15,12 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24.3
+          go-version-file: go.mod
       - name: Download Dependencies
         run: go mod download
 
   fmt:
-    name: go fmt
+    name: go fmt, vet, mod verify, mod tidy
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -29,11 +29,17 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24.3
-      - name: Run go fmt
+          go-version-file: go.mod
+      - name: Run go fmt, vet, mod verify, mod tidy
         run: |
           go fmt ./...
-          git diff --exit-code # Fail if files are not formatted
+          git diff --exit-code
+          go vet ./...
+          git diff --exit-code
+          go mod verify
+          git diff --exit-code
+          go mod tidy
+          git diff --exit-code
 
   lint:
     name: golangci-Lint
@@ -45,11 +51,27 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24.3
+          go-version-file: go.mod
       - name: Run GolangCI-Lint
         uses: golangci/golangci-lint-action@v8
         with:
           version: latest
+
+  govulncheck:
+    name: govulncheck
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Run govulncheck
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
 
   build:
     name: build main.go
@@ -61,13 +83,13 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24.3
+          go-version-file: go.mod
       - name: Build Main Binary
         run: go build -o main ./cmd/web/main.go
 
   unit-tests:
     name: unit-tests
-    needs: [fmt, lint, build]
+    needs: [fmt, lint, govulncheck, build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -75,13 +97,13 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24.3
+          go-version-file: go.mod
       - name: Run Unit Tests
         run: go test -tags=unittest -v ./...
 
   integration-tests:
     name: integration-tests
-    needs: [fmt, lint, build, unit-tests]
+    needs: [fmt, lint, govulncheck, build, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -89,6 +111,6 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24.3
+          go-version-file: go.mod
       - name: Run Integration Tests
         run: go test -tags=integrationtest -v ./...
