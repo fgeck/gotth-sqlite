@@ -89,7 +89,7 @@ jobs:
 
   unit-tests:
     name: unit-tests
-    needs: [fmt, lint, build]
+    needs: [fmt, lint, security, build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -103,7 +103,7 @@ jobs:
 
   integration-tests:
     name: integration-tests
-    needs: [fmt, lint, build, unit-tests]
+    needs: [fmt, lint, security, build, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
