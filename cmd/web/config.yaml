@@ -9,5 +9,5 @@ app:
   adminPassword: s3cure-p4ssw0rd
   adminEmail: test@localhost.io
 db:
-  persistence: FILE # else in-memory is used
+  databasePath: "./"
   migrationsPath: "../../migrations"
