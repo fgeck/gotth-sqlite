@@ -39,7 +39,7 @@ app:
   adminPassword: adminpassword
   adminEmail: wasd
 db:
-  persistence: FILE
+  databasePath: ./
   migrationsPath: "../../migrations"
 `
 
@@ -54,14 +54,14 @@ db:
 		os.Setenv("APP_ADMINUSER", "admin")
 		os.Setenv("APP_ADMINPASSWORD", "adminpassword")
 		os.Setenv("APP_ADMINEMAIL", "adm@test.io")
-		os.Setenv("DB_PERSISTENCE", "memory")
+		os.Setenv("DB_DATABASEPATH", "./test/")
 		os.Setenv("DB_MIGRATIONSPATH", "./test/migrations")
 		defer os.Unsetenv("APP_HOST")
 		defer os.Unsetenv("APP_PORT")
 		defer os.Unsetenv("APP_ADMINUSER")
 		defer os.Unsetenv("APP_ADMINPASSWORD")
 		defer os.Unsetenv("APP_ADMINEMAIL")
-		defer os.Unsetenv("DB_PERSISTENCE")
+		defer os.Unsetenv("DB_DATABASEPATH")
 		defer os.Unsetenv("DB_MIGRATIONSPATH")
 
 		// Load the config
@@ -76,7 +76,7 @@ db:
 		assert.Equal(t, "admin", config.App.AdminUser)
 		assert.Equal(t, "adminpassword", config.App.AdminPassword)
 		assert.Equal(t, "adm@test.io", config.App.AdminEmail)
-		assert.Equal(t, "memory", config.Db.Persistence)
+		assert.Equal(t, "./test/", config.Db.DataBasePath)
 		assert.Equal(t, "./test/migrations", config.Db.MigrationsPath)
 	})
 
@@ -95,7 +95,7 @@ app:
   port: 8080
   jwtSecret: change-m3-@$ap!
 db:
-  persistence: FILE
+  databasePath: ./hello/
   migrationsPath: "../../migrations"
 `
 		configPath, err := createTempConfigFile(invalidConfig)
@@ -130,7 +130,7 @@ db:
 		assert.Equal(t, "localhost", config.App.Host)
 		assert.Equal(t, "8080", config.App.Port)
 		assert.Equal(t, "change-m3-@$ap!", config.App.JwtSecret)
-		assert.Equal(t, "FILE", config.Db.Persistence)
+		assert.Equal(t, "./", config.Db.DataBasePath)
 		assert.Equal(t, "../../migrations", config.Db.MigrationsPath)
 	})
 }
