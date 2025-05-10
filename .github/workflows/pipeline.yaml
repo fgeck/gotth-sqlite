@@ -57,7 +57,7 @@ jobs:
         with:
           version: latest
 
-  security:
+  govulncheck:
     name: Vulnerability Check
     needs: setup
     runs-on: ubuntu-latest
@@ -89,7 +89,7 @@ jobs:
 
   unit-tests:
     name: unit-tests
-    needs: [fmt, lint, security, build]
+    needs: [fmt, lint, govulncheck, build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -103,7 +103,7 @@ jobs:
 
   integration-tests:
     name: integration-tests
-    needs: [fmt, lint, security, build, unit-tests]
+    needs: [fmt, lint, govulncheck, build, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -112,6 +112,5 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-            ${{ runner.os }}-go-
       - name: Run Integration Tests
         run: go test -tags=integrationtest -v ./...
