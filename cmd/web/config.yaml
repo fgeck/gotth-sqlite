@@ -10,4 +10,4 @@ app:
   adminEmail: test@localhost.io
 db:
   databasePath: "./"
-  migrationsPath: "../../migrations"
+  migrationsPath: "./migrations"
