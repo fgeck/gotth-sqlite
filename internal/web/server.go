@@ -65,6 +65,7 @@ func InitServer(e *echo.Echo, cfg *config.Config) {
 	// Public Routes
 	e.Static("/", "public")
 	e.GET("/", handlers.HomeHandler)
+	e.GET("/toggle-sidebar", handlers.SideBarHandler)
 	e.GET("/login", loginHandler.LoginRegisterContainerHandler)
 	e.GET("/loginForm", loginHandler.LoginFormHandler)
 	e.POST("/api/login", loginHandler.LoginHandler)

@@ -1,0 +1,11 @@
+package components
+
+templ SidebarItem(label string, icon string) {
+    <a 
+        href="#"
+        class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+    >
+        <span class="material-icons">{ icon }</span>
+        <span>{ label }</span>
+    </a>
+}

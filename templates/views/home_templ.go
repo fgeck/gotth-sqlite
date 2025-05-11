@@ -8,9 +8,12 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/fgeck/gotth-sqlite/templates/layout"
+import (
+	"github.com/fgeck/gotth-sqlite/templates/components"
+	"github.com/fgeck/gotth-sqlite/templates/layout"
+)
 
-func Home() templ.Component {
+func Home(isCollapsed bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -43,7 +46,15 @@ func Home() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav class=\"bg-slate-800 p-4\"><div class=\"container mx-auto flex justify-between items-center\"><a href=\"/\" class=\"text-white text-2xl font-bold\">MyApp</a><div><a href=\"/login\" class=\"text-slate-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium\">Login</a> <a href=\"/register\" class=\"text-slate-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium\">Register</a></div></div></nav><div class=\"flex flex-col items-center justify-center min-h-screen bg-slate-100\"><div class=\"text-center\"><h1 class=\"text-7xl font-bold text-blue-600\">Welcome home, Dude!</h1><p class=\"text-2xl text-slate-700 mt-4\">This is a simple web application</p></div></div>")
+			templ_7745c5c3_Err = components.Sidebar(isCollapsed).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.MainContent(isCollapsed).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

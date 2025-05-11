@@ -1,0 +1,28 @@
+package components
+
+templ CollapsedSidebar() {
+    <div 
+        id="sidebar"
+        class="w-16 bg-gray-200 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 flex flex-col h-screen transition-all duration-300"
+        hx-preserve="true"
+    >
+        <div class="p-4 border-b border-gray-300 dark:border-gray-600 flex justify-center">
+            <button 
+                hx-get="/toggle-sidebar" 
+                hx-target="#sidebar"
+                hx-swap="outerHTML"
+                class="text-gray-600 dark:text-gray-300 hover:text-blue-500"
+            >
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+
+        <nav class="flex-1 flex flex-col items-center gap-4 p-2">
+             @CollapsedSidebarItem("dashboard") 
+             @CollapsedSidebarItem("folder") 
+             @CollapsedSidebarItem("group") 
+             @CollapsedSidebarItem("calendar_today") 
+             @CollapsedSidebarItem("settings") 
+        </nav>
+    </div>
+}

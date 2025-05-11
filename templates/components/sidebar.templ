@@ -1,0 +1,62 @@
+package components
+
+templ Sidebar(isCollapsed bool) {
+    if isCollapsed {
+        <div    
+            id="sidebar"
+            class="w-64 bg-gray-200 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 flex flex-col h-screen transition-all duration-300"
+            hx-swap-oob="true"
+        >
+            <!-- Header with collapse button -->
+            <div class="p-4 border-b border-gray-300 dark:border-gray-600 flex justify-between items-center">
+                <h1 class="text-xl font-bold text-blue-600 dark:text-blue-400">My GoTTH App</h1>
+                <button
+                    class="text-gray-600 dark:text-gray-300 hover:text-blue-500"
+                    hx-get="/toggle-sidebar"
+                    hx-trigger="click"
+                    hx-target="#sidebar, #maincontent"
+                    _="on htmx:afterRequest 
+                    if event.detail.successful
+                        trigger htmx:settle on body">
+                    <span class="material-icons">menu</span>
+                </button>
+            </div>
+
+            <!-- Navigation items -->
+            <nav class="flex-1 flex flex-col gap-1 p-2">
+                @SidebarItem("Dashboard", "dashboard") 
+                @SidebarItem("Projects", "folder") 
+                @SidebarItem("Team", "group") 
+                @SidebarItem("Calendar", "calendar_today") 
+                @SidebarItem("Settings", "settings") 
+            </nav>
+        </div>
+    } else {
+        <div 
+            id="sidebar"
+            class="w-16 bg-gray-200 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 flex flex-col h-screen transition-all duration-300"
+            hx-swap-oob="true"
+        >
+            <div class="p-4 border-b border-gray-300 dark:border-gray-600 flex justify-center">
+                <button
+                    class="text-gray-600 dark:text-gray-300 hover:text-blue-500"
+                    hx-get="/toggle-sidebar"
+                    hx-trigger="click"
+                    hx-target="#sidebar, #maincontent"
+                    _="on htmx:afterRequest 
+                    if event.detail.successful
+                        trigger htmx:settle on body">>
+                    <span class="material-icons">menu</span>
+                </button>
+            </div>
+
+            <nav class="flex-1 flex flex-col items-center gap-4 p-2">
+                @CollapsedSidebarItem("dashboard") 
+                @CollapsedSidebarItem("folder") 
+                @CollapsedSidebarItem("group") 
+                @CollapsedSidebarItem("calendar_today") 
+                @CollapsedSidebarItem("settings") 
+            </nav>
+        </div>
+    }
+}
