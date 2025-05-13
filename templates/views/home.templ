@@ -5,9 +5,9 @@ import (
   "github.com/fgeck/gotth-sqlite/templates/layout"
 )
 
-templ Home(isCollapsed bool) {
+templ Home(isCollapsed bool, isUserLoggedIn bool) {
   @layout.Base(){
-    @components.Sidebar(isCollapsed) 
+    @components.Sidebar(isCollapsed, isUserLoggedIn)
     @components.MainContent(isCollapsed)
   }
 }

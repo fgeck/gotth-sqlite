@@ -1,0 +1,14 @@
+package components
+
+templ AuthError(message string) {
+    <div class="rounded-md bg-red-50 p-4 dark:bg-red-900/30" _="on load wait 5s then fade out">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <span class="material-icons text-red-400 dark:text-red-300">error</span>
+            </div>
+            <div class="ml-3">
+                <p class="text-sm text-red-700 dark:text-red-300">{ message }</p>
+            </div>
+        </div>
+    </div>
+}

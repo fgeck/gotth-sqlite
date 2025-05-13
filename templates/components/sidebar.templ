@@ -1,7 +1,7 @@
 package components
 
-templ Sidebar(isCollapsed bool) {
-    if isCollapsed {
+templ Sidebar(isCollapsed bool, isUserLoggedIn bool) {
+    if !isCollapsed {
         <div    
             id="sidebar"
             class="w-64 bg-gray-200 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 flex flex-col h-screen transition-all duration-300"
@@ -24,11 +24,21 @@ templ Sidebar(isCollapsed bool) {
 
             <!-- Navigation items -->
             <nav class="flex-1 flex flex-col gap-1 p-2">
-                @SidebarItem("Dashboard", "dashboard") 
-                @SidebarItem("Projects", "folder") 
-                @SidebarItem("Team", "group") 
-                @SidebarItem("Calendar", "calendar_today") 
-                @SidebarItem("Settings", "settings") 
+                <!-- dummy  -->
+                @SidebarItem("Dashboard", "dashboard", "/") 
+                if isUserLoggedIn {
+                    @SidebarItem("Profile", "person", "/profile")
+                    <form hx-post="/logout" hx-target="body" class="mt-auto">
+                        @SidebarButton("Logout", "logout", "/logout")
+                    </form>
+                } else {
+                    <div class="mt-auto space-y-1">  <!-- Pushes auth links to bottom -->
+                        @SidebarItem("Login", "login", "/login")
+                        @SidebarItem("Register", "person_add", "/register")
+                    </div>
+                }
+                <!-- dummy  -->
+                @SidebarItem("Settings", "settings", "/") 
             </nav>
         </div>
     } else {
@@ -59,4 +69,16 @@ templ Sidebar(isCollapsed bool) {
             </nav>
         </div>
     }
+}
+
+templ SidebarButton(label string, icon string, path string) {
+    <button 
+        href={ templ.URL(path) }
+        hx-post={ templ.URL(path) }
+        type="submit" 
+        class="w-full flex items-center gap-3 p-3 cursor-pointer rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+    >
+        <span class="material-icons">{ icon }</span>
+        <span>{ label }</span>
+    </button>
 }

@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Sidebar(isCollapsed bool) templ.Component {
+func Sidebar(isCollapsed bool, isUserLoggedIn bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,37 +29,64 @@ func Sidebar(isCollapsed bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		if isCollapsed {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"sidebar\" class=\"w-64 bg-gray-200 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 flex flex-col h-screen transition-all duration-300\" hx-swap-oob=\"true\"><!-- Header with collapse button --><div class=\"p-4 border-b border-gray-300 dark:border-gray-600 flex justify-between items-center\"><h1 class=\"text-xl font-bold text-blue-600 dark:text-blue-400\">My GoTTH App</h1><button class=\"text-gray-600 dark:text-gray-300 hover:text-blue-500\" hx-get=\"/toggle-sidebar\" hx-trigger=\"click\" hx-target=\"#sidebar, #maincontent\" _=\"on htmx:afterRequest \n                    if event.detail.successful\n                        trigger htmx:settle on body\"><span class=\"material-icons\">menu</span></button></div><!-- Navigation items --><nav class=\"flex-1 flex flex-col gap-1 p-2\">")
+		if !isCollapsed {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"sidebar\" class=\"w-64 bg-gray-200 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 flex flex-col h-screen transition-all duration-300\" hx-swap-oob=\"true\"><!-- Header with collapse button --><div class=\"p-4 border-b border-gray-300 dark:border-gray-600 flex justify-between items-center\"><h1 class=\"text-xl font-bold text-blue-600 dark:text-blue-400\">My GoTTH App</h1><button class=\"text-gray-600 dark:text-gray-300 hover:text-blue-500\" hx-get=\"/toggle-sidebar\" hx-trigger=\"click\" hx-target=\"#sidebar, #maincontent\" _=\"on htmx:afterRequest \n                    if event.detail.successful\n                        trigger htmx:settle on body\"><span class=\"material-icons\">menu</span></button></div><!-- Navigation items --><nav class=\"flex-1 flex flex-col gap-1 p-2\"><!-- dummy  -->")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = SidebarItem("Dashboard", "dashboard").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = SidebarItem("Dashboard", "dashboard", "/").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = SidebarItem("Projects", "folder").Render(ctx, templ_7745c5c3_Buffer)
+			if isUserLoggedIn {
+				templ_7745c5c3_Err = SidebarItem("Profile", "person", "/profile").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " <form hx-post=\"/logout\" hx-target=\"body\" class=\"mt-auto\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = SidebarButton("Logout", "logout", "/logout").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</form>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"mt-auto space-y-1\"><!-- Pushes auth links to bottom -->")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = SidebarItem("Login", "login", "/login").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = SidebarItem("Register", "person_add", "/register").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<!-- dummy  -->")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = SidebarItem("Team", "group").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = SidebarItem("Settings", "settings", "/").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = SidebarItem("Calendar", "calendar_today").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = SidebarItem("Settings", "settings").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</nav></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</nav></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div id=\"sidebar\" class=\"w-16 bg-gray-200 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 flex flex-col h-screen transition-all duration-300\" hx-swap-oob=\"true\"><div class=\"p-4 border-b border-gray-300 dark:border-gray-600 flex justify-center\"><button class=\"text-gray-600 dark:text-gray-300 hover:text-blue-500\" hx-get=\"/toggle-sidebar\" hx-trigger=\"click\" hx-target=\"#sidebar, #maincontent\" _=\"on htmx:afterRequest \n                    if event.detail.successful\n                        trigger htmx:settle on body\">> <span class=\"material-icons\">menu</span></button></div><nav class=\"flex-1 flex flex-col items-center gap-4 p-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div id=\"sidebar\" class=\"w-16 bg-gray-200 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 flex flex-col h-screen transition-all duration-300\" hx-swap-oob=\"true\"><div class=\"p-4 border-b border-gray-300 dark:border-gray-600 flex justify-center\"><button class=\"text-gray-600 dark:text-gray-300 hover:text-blue-500\" hx-get=\"/toggle-sidebar\" hx-trigger=\"click\" hx-target=\"#sidebar, #maincontent\" _=\"on htmx:afterRequest \n                    if event.detail.successful\n                        trigger htmx:settle on body\">> <span class=\"material-icons\">menu</span></button></div><nav class=\"flex-1 flex flex-col items-center gap-4 p-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -83,10 +110,91 @@ func Sidebar(isCollapsed bool) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</nav></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</nav></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
+		}
+		return nil
+	})
+}
+
+func SidebarButton(label string, icon string, path string) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<button href=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(path))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/sidebar.templ`, Line: 76, Col: 30}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" hx-post=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(path))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/sidebar.templ`, Line: 77, Col: 33}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" type=\"submit\" class=\"w-full flex items-center gap-3 p-3 cursor-pointer rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors\"><span class=\"material-icons\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(icon)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/sidebar.templ`, Line: 81, Col: 43}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</span> <span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var6 string
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(label)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/sidebar.templ`, Line: 82, Col: 21}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</span></button>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
 		}
 		return nil
 	})
