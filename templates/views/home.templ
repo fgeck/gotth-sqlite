@@ -13,10 +13,52 @@ templ Home() {
         </div>
       </div>
     </nav>
-    <div class="flex flex-col items-center justify-center min-h-screen bg-slate-100">
-      <div class="text-center">
-        <h1 class="text-7xl font-bold text-blue-600">Welcome home, Dude!</h1>
-        <p class="text-2xl text-slate-700 mt-4">This is a simple web application</p>
+    <div
+      id="login-form"
+      class="bg-slate-500 w-72 h-72 m-auto grid grid-cols-1 content-center"
+    >
+      <div
+        id="email"
+        class=""
+      >
+        <label 
+          class=""
+          for="email"
+        >Email
+        </label>
+        <input
+          class=""
+          type="email" 
+          name="email" 
+          id="email" 
+          required
+        >
+      </div>
+      <div
+        id="password"
+        class=""
+      >
+        <label 
+          class=""
+          for="password"
+        >Password
+        </label>
+        <input
+          class=""
+          type="password" 
+          name="password" 
+          id="password" 
+          required
+        >
+      </div>
+      <div
+        class="m-auto"
+      >
+        <button
+          class="w-2/5 border cursor-pointer"
+          type="submit"
+        >Submit
+        </button>
       </div>
     </div>
   }
