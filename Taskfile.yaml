@@ -25,6 +25,14 @@ tasks:
     preconditions:
       - which brew
       - which go
+
+  fmt-verify-tidy-vet:
+    desc: Executes go fmt, go mod verify, go mod tidy, go vet
+    cmds:
+      - go fmt ./...
+      - go vet ./...  
+      - go mod verify
+      - go mod tidy
   
   generate-mocks:
     desc: Generate mocks for the project
